@@ -6,6 +6,8 @@ implement multiple readers or even other plugin contributions. see:
 https://napari.org/stable/plugins/guides.html?#readers
 """
 
+import xml.etree.ElementTree as ET
+
 import numpy as np
 
 
@@ -30,7 +32,7 @@ def napari_get_reader(path):
         path = path[0]
 
     # if we know we cannot read the file, we immediately return None.
-    if not path.endswith(".npy"):
+    if not path.endswith(".xml"):
         return None
 
     # otherwise we return the *function* that can read ``path``.
@@ -59,15 +61,18 @@ def reader_function(path):
         layer. Both "meta", and "layer_type" are optional. napari will
         default to layer_type=="image" if not provided
     """
-    # handle both a string and a list of strings
-    paths = [path] if isinstance(path, str) else path
-    # load all files into array
-    arrays = [np.load(_path) for _path in paths]
-    # stack arrays into single array
-    data = np.squeeze(np.stack(arrays))
+    # Open and read file
+    data = ET.parse(path).getroot()
 
-    # optional kwargs for the corresponding viewer.add_* method
-    add_kwargs = {}
+    # Parse through Soup
+    markers = data[1][1][1:]
 
-    layer_type = "image"  # optional, default is "image"
-    return [(data, add_kwargs, layer_type)]
+    # Extract points
+    coords = []
+    for current in markers:
+        coords.append([int(current[1].text), int(current[0].text)])
+    coords = np.array(coords)
+
+    # points_layer = viewer.add_points(coords, size=30)
+
+    return [(coords, {"size": 15}, "points")]
