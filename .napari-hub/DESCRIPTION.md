@@ -6,4 +6,6 @@ If you need some help writing a good description, check out our
 [guide](https://github.com/chanzuckerberg/napari-hub/wiki/Writing-the-Perfect-Description-for-your-Plugin)
 -->
 
-The developer has not yet provided a napari-hub specific description.
+Plugin which opens .xml files generated from ImageJ's cell counter tool as a points layer in napari.
+
+NOTE - Make sure "CellCounter" is included in the name of the file ~ imageJ should do this automatically. 
