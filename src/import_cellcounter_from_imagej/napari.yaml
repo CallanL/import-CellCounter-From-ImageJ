@@ -11,5 +11,5 @@ contributions:
       title: Open data with ImageJ Cell Counter to Points Layer
   readers:
     - command: import-CellCounter-From-ImageJ.get_reader
-      accepts_directories: True
+      accepts_directories: false
       filename_patterns: ['*.xml']
